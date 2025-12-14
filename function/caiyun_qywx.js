@@ -229,8 +229,11 @@ async function sendRealtimeWeatherNotification(data, address) {
 async function sendQYWX(title, content) {
     const qywxKey = $.read("#caiyun_qywx_key");
     if (!qywxKey) {
-        $.log("❌ 未配置企业微信 Key (caiyun_qywx_key)，无法推送");
-        $.notify(title, "推送失败", "未配置企业微信 Key");
+        $.log("⚠️ 未配置企业微信 Key (caiyun_qywx_key)，降级为本地通知");
+        const lines = content.split('\n');
+        const subtitle = lines[0];
+        const body = lines.slice(1).join('\n').trim();
+        $.notify(title, subtitle, body);
         return;
     }
 
