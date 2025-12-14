@@ -15,6 +15,8 @@ http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/settings\/profile\/ge
 http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/common\/app\/config\/list script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-App-Config-List
 http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/user\/account\/status script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Account-Status
 http-request ^http:\/\/lizhengbo\.opendoor\.com\/\?deviceName=.+ script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-open-door.js, timeout=20, tag=Zhuzher-Shortcut-OpenDoor
+http-request ^http:\/\/lizhengbo\.work\/signin\/morning script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, timeout=10, tag=WorkSignin-Morning-Manual
+http-request ^http:\/\/lizhengbo\.work\/signin\/evening script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, timeout=10, tag=WorkSignin-Evening-Manual
 http-response ^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth) script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/NiceframProCrack.js, requires-body=true, timeout=10, tag=NicegramProCrack
 
 [Mitm]

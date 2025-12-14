@@ -12,31 +12,36 @@ const KEY_QYWX_KEY = "work_signin_qywx_key";
 
 (async () => {
     try {
-        $.log("开始执行下班签到检查...");
+        const isManual = typeof $request !== "undefined";
+        $.log(`开始执行下班签到... 模式: ${isManual ? "手动触发" : "自动定时"}`);
 
-        // 1. 检查是否已上班签到
-        // 如果没签上班卡，意味着今天可能不需要上班或者忘了，这里按照逻辑是不签下班卡
-        const isMorningDone = $.read(KEY_MORNING_DONE) === "true";
-        if (!isMorningDone) {
-            $.log("今日尚未上班签到，跳过下班签到");
-            return;
-        }
+        if (!isManual) {
+            // 1. 检查是否已上班签到
+            // 如果没签上班卡，意味着今天可能不需要上班或者忘了，这里按照逻辑是不签下班卡
+            const isMorningDone = $.read(KEY_MORNING_DONE) === "true";
+            if (!isMorningDone) {
+                $.log("今日尚未上班签到，跳过下班签到");
+                return;
+            }
 
-        // 2. 检查是否已下班签到
-        const isEveningDone = $.read(KEY_EVENING_DONE) === "true";
-        if (isEveningDone) {
-            $.log("今日下班已签到，跳过");
-            return;
+            // 2. 检查是否已下班签到
+            const isEveningDone = $.read(KEY_EVENING_DONE) === "true";
+            if (isEveningDone) {
+                $.log("今日下班已签到，跳过");
+                return;
+            }
+
+            // 随机睡眠 0-10 秒
+            const sleepTime = Math.floor(Math.random() * 12000);
+            $.log(`随机等待 ${sleepTime/100} 秒...`);
+            await sleep(sleepTime);
+        } else {
+            $.log("手动模式：跳过检查和等待，立即执行");
         }
 
         // 3. 执行签到
         $.log("准备执行下班签到...");
         
-        // 随机睡眠 0-10 秒
-        const sleepTime = Math.floor(Math.random() * 10000);
-        $.log(`随机等待 ${sleepTime/1000} 秒...`);
-        await sleep(sleepTime);
-
         // 发送消息
         await sendSignInMessage("下班签到", "👋 下班打卡成功！\n今天辛苦了，早点休息！");
 
@@ -44,11 +49,20 @@ const KEY_QYWX_KEY = "work_signin_qywx_key";
         $.write("true", KEY_EVENING_DONE);
         $.log("状态已更新：下班签到完成");
 
+        if (isManual) {
+            $.done({ response: { status: 200, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: "👋 下班签到执行成功" } });
+        }
+
     } catch (e) {
         $.log(`❌ 错误: ${e.message}`);
         $.notify($.name, "运行出错", e.message);
+        if (typeof $request !== "undefined") {
+            $.done({ response: { status: 500, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: `❌ 执行失败: ${e.message}` } });
+        }
     } finally {
-        $.done();
+        if (typeof $request === "undefined") {
+            $.done();
+        }
     }
 })();
 
