@@ -6,9 +6,9 @@
  */
 const $ = API("签到任务-下班签到");
 
-const KEY_MORNING_DONE = "work_signin_morning_done";
-const KEY_EVENING_DONE = "work_signin_evening_done";
-const KEY_QYWX_KEY = "work_signin_qywx_key";
+const KEY_MORNING_DONE = "#work_signin_morning_done";
+const KEY_EVENING_DONE = "#work_signin_evening_done";
+const KEY_QYWX_KEY = "#work_signin_qywx_key";
 
 (async () => {
     try {
