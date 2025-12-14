@@ -63,8 +63,8 @@ const CONFIG = {
         throw new Error(`未找到设备名称对应的deviceCode: ${deviceName}`);
       }
 
-      let accessToken = $.read("zhuzher_access_token");
-      const refreshToken = $.read("zhuzher_refresh_token");
+      let accessToken = $.read("#zhuzher_access_token");
+      const refreshToken = $.read("#zhuzher_refresh_token");
       if (!accessToken && !refreshToken) {
         throw new Error("未找到token，请先登录住这儿APP触发拦截");
       }
