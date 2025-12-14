@@ -54,9 +54,9 @@ const CONFIG = {
       const must = typeof $request !== "undefined" && $request && typeof $request.url === "string" && /(?:^|[?&])deviceName=/.test($request.url);
       if (!must) { $done({ response: { status: 200, headers: { "Content-Type": "application/json" }, body: "{}" } }); return; }
       const nowTs = Date.now();
-      const lastTs = parseInt($.read("zhuzher_last_trigger_ts") || "0", 10);
+      const lastTs = parseInt($.read("#zhuzher_last_trigger_ts") || "0", 10);
       if (lastTs && nowTs - lastTs < 2000) { $.info("短时间重复触发，忽略"); $done({ response: { status: 200, headers: { "Content-Type": "application/json" }, body: "{}" } }); return; }
-      $.write(String(nowTs), "zhuzher_last_trigger_ts");
+      $.write(String(nowTs), "#zhuzher_last_trigger_ts");
       const deviceCode = mapDevice(deviceName);
       if (!deviceCode) {
         $.notify("住这儿开门失败", deviceName || "<未提供>", "未找到匹配的设备编码");
@@ -83,7 +83,7 @@ const CONFIG = {
       if (!data || data.code === 401) {
         const refreshed = await refreshAccessToken();
         if (!refreshed) throw new Error("刷新token失败");
-        accessToken = $.read("zhuzher_access_token");
+        accessToken = $.read("#zhuzher_access_token");
         headers = { ...CONFIG.headers, Authorization: `Bearer ${accessToken}` };
         $.info("授权过期，刷新token后重试");
         resp = await $.http.post({ url: CONFIG.openDoorApi, headers, body });
@@ -117,7 +117,7 @@ function mapDevice(name) {
 }
 
 async function refreshAccessToken() {
-  const refreshToken = $.read("zhuzher_refresh_token");
+  const refreshToken = $.read("#zhuzher_refresh_token");
   if (!refreshToken) return false;
 
   try {
@@ -129,9 +129,9 @@ async function refreshAccessToken() {
     });
     const data = safeJSON(resp.body);
     if (data && data.code === 200 && data.result && data.result.accessToken) {
-      $.write(data.result.accessToken, "zhuzher_access_token");
-      if (data.result.refreshToken) $.write(data.result.refreshToken, "zhuzher_refresh_token");
-      if (data.result.userID) $.write(data.result.userID, "zhuzher_user_id");
+      $.write(data.result.accessToken, "#zhuzher_access_token");
+      if (data.result.refreshToken) $.write(data.result.refreshToken, "#zhuzher_refresh_token");
+      if (data.result.userID) $.write(data.result.userID, "#zhuzher_user_id");
       return true;
     }
     return false;
@@ -306,7 +306,7 @@ function getArg(key) {
       }
     }
   } catch {}
-  const persisted = $.read("zhuzher_device_name");
+  const persisted = $.read("#zhuzher_device_name");
   if (persisted) return persisted;
   return null;
 }
