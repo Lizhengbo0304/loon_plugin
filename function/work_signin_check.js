@@ -12,21 +12,21 @@ const KEY_EVENING_DONE = "work_signin_evening_done";
 
 (async () => {
     try {
-        $.log("开始执行每日签到检查任务...");
+        $.info("开始执行每日签到检查任务...");
 
         // 1. 重置签到状态
         $.write("false", KEY_MORNING_DONE);
         $.write("false", KEY_EVENING_DONE);
-        $.log("已重置早/晚签到状态为 false");
+        $.info("已重置早/晚签到状态为 false");
 
         // 2. 检查是否为工作日
         const isWorkDay = await checkIsWorkDay();
         $.write(isWorkDay.toString(), KEY_IS_WORKDAY);
-        $.log(`今日工作日状态更新为: ${isWorkDay}`);
+        $.info(`今日工作日状态更新为: ${isWorkDay}`);
 
         $.notify($.name, "检查完成", `工作日: ${isWorkDay ? "是" : "否"}\n签到状态已重置`);
     } catch (e) {
-        $.log(`❌ 错误: ${e.message}`);
+        $.error(`❌ 错误: ${e.message}`);
         $.notify($.name, "运行出错", e.message);
     } finally {
         $.done();
@@ -52,21 +52,21 @@ async function checkIsWorkDay() {
                 // 0:工作日, 3:调休(上班) -> 是工作日
                 // 1:周末, 2:节日 -> 非工作日
                 const isWork = (type === 0 || type === 3);
-                $.log(`API 查询结果: ${dateStr} type=${type} (${res.type.name}), result=${isWork}`);
+                $.info(`API 查询结果: ${dateStr} type=${type} (${res.type.name}), result=${isWork}`);
                 return isWork;
             } else {
-                $.log(`API 返回错误代码: ${data}`);
+                $.error(`API 返回错误代码: ${data}`);
                 // 降级
                 const day = now.getDay();
                 return (day !== 0 && day !== 6);
             }
         } catch (e) {
-            $.log(`解析 API 数据失败: ${e.message}`);
+            $.error(`解析 API 数据失败: ${e.message}`);
             const day = now.getDay();
             return (day !== 0 && day !== 6);
         }
     } catch (error) {
-        $.log(`API 请求失败: ${error}，降级为周末判断`);
+        $.error(`API 请求失败: ${error}，降级为周末判断`);
         const day = now.getDay();
         return (day !== 0 && day !== 6);
     }
