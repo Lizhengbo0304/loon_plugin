@@ -6,9 +6,9 @@
  */
 const $ = API("签到任务-每日检查");
 
-const KEY_IS_WORKDAY = "work_signin_is_workday";
-const KEY_MORNING_DONE = "work_signin_morning_done";
-const KEY_EVENING_DONE = "work_signin_evening_done";
+const KEY_IS_WORKDAY = "#work_signin_is_workday";
+const KEY_MORNING_DONE = "#work_signin_morning_done";
+const KEY_EVENING_DONE = "#work_signin_evening_done";
 
 (async () => {
     try {
