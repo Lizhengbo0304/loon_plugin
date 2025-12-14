@@ -1,0 +1,136 @@
+{
+  "id": "lizhengbo.loon.sub",
+  "name": "李正博 自用应用订阅",
+  "author": "@lizhengbo",
+  "icon": "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/lizhengbo.png",
+  "repo": "https://github.com/Lizhengbo0304/loon_plugin",
+  "apps": [
+    {
+      "id": "Caiyun",
+      "name": "彩云天气",
+      "keys": [
+        "caiyun_token",
+        "caiyun_qywx_key"
+      ],
+      "settings": [
+        {
+          "id": "caiyun_token",
+          "name": "彩云天气API Token",
+          "val": null,
+          "type": "text",
+          "autoGrow": false,
+          "rows": 2,
+          "desc": "彩云天气的Token，用于获取天气信息。脚本会自动监控高德API调用并获取位置信息。"
+        },
+        {
+          "id": "caiyun_qywx_key",
+          "name": "企业微信 Webhook Key",
+          "val": "",
+          "type": "text",
+          "desc": "用于推送天气信息的企业微信机器人 Key (可选)"
+        }
+      ],
+      "author": "@lizhengbo",
+      "repo": "https://github.com/Lizhengbo0304/loon_plugin",
+      "icons": [
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/caiyun.png",
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/caiyun.png"
+      ],
+      "script": "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/caiyun_qywx.js"
+    },
+    {
+      "id": "Zhuzher",
+      "name": "住这儿助手",
+      "keys": [
+        "zhuzher_access_token",
+        "zhuzher_refresh_token",
+        "zhuzher_user_id"
+      ],
+      "settings": [
+        {
+          "id": "zhuzher_access_token",
+          "name": "住这儿访问令牌",
+          "val": "",
+          "type": "text",
+          "desc": "住这儿APP accessToken（自动获取，无需手动填写）"
+        },
+        {
+          "id": "zhuzher_refresh_token",
+          "name": "住这儿刷新令牌",
+          "val": "",
+          "type": "text",
+          "desc": "住这儿APP refreshToken（自动获取，无需手动填写）"
+        },
+        {
+          "id": "zhuzher_user_id",
+          "name": "住这儿用户ID",
+          "val": "",
+          "type": "text",
+          "desc": "住这儿APP用户ID（自动获取，无需手动填写）"
+        }
+      ],
+      "author": "@lizhengbo",
+      "repo": "https://github.com/Lizhengbo0304/loon_plugin",
+      "icons": [
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/zhuzher.png",
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/zhuzher.png"
+      ],
+      "script": "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-open-door.js"
+    },
+    {
+      "id": "WorkSignin",
+      "name": "企业微信签到",
+      "keys": [
+        "work_signin_is_workday",
+        "work_signin_is_leave",
+        "work_signin_morning_done",
+        "work_signin_evening_done",
+        "work_signin_qywx_key"
+      ],
+      "settings": [
+        {
+          "id": "work_signin_qywx_key",
+          "name": "企业微信 Webhook Key",
+          "val": "",
+          "type": "text",
+          "desc": "企业微信机器人 Webhook Key (必填)"
+        },
+        {
+          "id": "work_signin_is_leave",
+          "name": "今日请假",
+          "val": false,
+          "type": "boolean",
+          "desc": "开启后，今日将跳过签到"
+        },
+        {
+          "id": "work_signin_is_workday",
+          "name": "今日工作日 (自动更新)",
+          "val": false,
+          "type": "boolean",
+          "desc": "脚本自动检测，无需手动设置"
+        },
+        {
+          "id": "work_signin_morning_done",
+          "name": "上班已签到 (自动更新)",
+          "val": false,
+          "type": "boolean",
+          "desc": "脚本自动更新状态"
+        },
+        {
+          "id": "work_signin_evening_done",
+          "name": "下班已签到 (自动更新)",
+          "val": false,
+          "type": "boolean",
+          "desc": "脚本自动更新状态"
+        }
+      ],
+      "author": "@lizhengbo",
+      "repo": "https://github.com/Lizhengbo0304/loon_plugin",
+      "icons": [
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/lizhengbo.png",
+        "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/Icon/lizhengbo.png"
+      ],
+      "script": "https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_check.js"
+    }
+  ]
+}

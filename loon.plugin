@@ -1,0 +1,21 @@
+#!name=Loon自用脚本合集
+#!desc=彩云天气、住这儿开门、记账与 Nicegram 脚本集
+#!author=Lizhengbo
+#!version=2025.12.12
+#!homepage=https://github.com/Lizhengbo0304/loon_plugin
+
+[Script]
+cron "0 1 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/work_signin_check.js, tag=WorkSignin-DailyCheck
+cron "31 8 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/work_signin_morning.js, tag=WorkSignin-Morning
+cron "21 21 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/work_signin_evening.js, tag=WorkSignin-Evening
+http-request ^https:\/\/restapi\.amap\.com\/v3\/geocode\/geo script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/caiyun_qywx.js, timeout=10, tag=Caiyun-Geo-Request
+http-response ^https:\/\/api\.5th\.zone\/auth\/v3\/external\/oauth\/accessToken script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-AccessToken
+http-response ^https:\/\/api\.5th\.zone\/linksail\/api\/mobile\/login script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-MobileLogin
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/settings\/profile\/get script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Profile-Get
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/common\/app\/config\/list script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-App-Config-List
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/user\/account\/status script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Account-Status
+http-request ^http:\/\/lizhengbo\.opendoor\.com\/\?deviceName=.+ script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/funtion/zhuzher-open-door.js, timeout=20, tag=Zhuzher-Shortcut-OpenDoor
+http-response ^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth) script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/NiceframProCrack.js, requires-body=true, timeout=10, tag=NicegramProCrack
+
+[Mitm]
+hostname = restapi.amap.com, api.heylumi.cn, api.5th.zone, nicegram.cloud
