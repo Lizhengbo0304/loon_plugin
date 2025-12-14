@@ -6,10 +6,10 @@
  */
 const $ = API("签到任务-上班签到");
 
-const KEY_IS_WORKDAY = "work_signin_is_workday";
-const KEY_IS_LEAVE = "work_signin_is_leave";
-const KEY_MORNING_DONE = "work_signin_morning_done";
-const KEY_QYWX_KEY = "work_signin_qywx_key";
+const KEY_IS_WORKDAY = "#work_signin_is_workday";
+const KEY_IS_LEAVE = "#work_signin_is_leave";
+const KEY_MORNING_DONE = "#work_signin_morning_done";
+const KEY_QYWX_KEY = "#work_signin_qywx_key";
 
 (async () => {
     try {
