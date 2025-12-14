@@ -14,54 +14,54 @@ const KEY_QYWX_KEY = "work_signin_qywx_key";
 (async () => {
     try {
         const isManual = typeof $request !== "undefined";
-        $.log(`开始执行上班签到... 模式: ${isManual ? "手动触发" : "自动定时"}`);
+        $.info(`开始执行上班签到... 模式: ${isManual ? "手动触发" : "自动定时"}`);
 
         if (!isManual) {
             // 1. 检查是否请假
             const isLeave = $.read(KEY_IS_LEAVE) === "true";
             if (isLeave) {
-                $.log("今日已设置请假，跳过签到");
+                $.info("今日已设置请假，跳过签到");
                 return;
             }
 
             // 2. 检查是否为工作日
             const isWorkDay = $.read(KEY_IS_WORKDAY) === "true";
             if (!isWorkDay) {
-                $.log("今日非工作日，跳过签到");
+                $.info("今日非工作日，跳过签到");
                 return;
             }
 
             // 3. 检查是否已签到
             const isDone = $.read(KEY_MORNING_DONE) === "true";
             if (isDone) {
-                $.log("今日上班已签到，跳过");
+                $.info("今日上班已签到，跳过");
                 return;
             }
             
             // 随机睡眠 0-10 秒
             const sleepTime = Math.floor(Math.random() * 12000);
-            $.log(`随机等待 ${sleepTime/100} 秒...`);
+            $.info(`随机等待 ${sleepTime/1000} 秒...`);
             await sleep(sleepTime);
         } else {
-            $.log("手动模式：跳过检查和等待，立即执行");
+            $.info("手动模式：跳过检查和等待，立即执行");
         }
 
         // 4. 执行签到
-        $.log("准备执行上班签到...");
+        $.info("准备执行上班签到...");
 
         // 发送消息
         await sendSignInMessage("上班签到", "✅ 上班打卡成功！\n祝你今天工作愉快！");
 
         // 5. 更新状态
         $.write("true", KEY_MORNING_DONE);
-        $.log("状态已更新：上班签到完成");
+        $.info("状态已更新：上班签到完成");
 
         if (isManual) {
             $.done({ response: { status: 200, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: "✅ 上班签到执行成功" } });
         }
 
     } catch (e) {
-        $.log(`❌ 错误: ${e.message}`);
+        $.error(`❌ 错误: ${e.message}`);
         $.notify($.name, "运行出错", e.message);
         if (typeof $request !== "undefined") {
             $.done({ response: { status: 500, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: `❌ 执行失败: ${e.message}` } });
@@ -102,7 +102,7 @@ async function sendSignInMessage(title, content) {
         try {
             const res = JSON.parse(data);
             if (res.errcode === 0) {
-                $.log("企业微信消息发送成功");
+                $.info("企业微信消息发送成功");
                 $.notify($.name, title, "消息已推送");
                 return res;
             } else {
