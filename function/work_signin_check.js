@@ -4,7 +4,7 @@
  * 功能：重置每日签到状态，判断当天是否为工作日
  * Cron: 0 1 * * *
  */
-const $ = new Env("签到任务-每日检查");
+const $ = API("签到任务-每日检查");
 
 const KEY_IS_WORKDAY = "work_signin_is_workday";
 const KEY_MORNING_DONE = "work_signin_morning_done";
@@ -41,38 +41,35 @@ async function checkIsWorkDay() {
     const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     const url = `https://timor.tech/api/holiday/info/${dateStr}`;
 
-    return new Promise((resolve, reject) => {
-        $.get({ url, headers: { "User-Agent": "Mozilla/5.0" } }, (error, response, data) => {
-            if (error) {
-                // 如果 API 失败，降级为简单的周末判断
-                $.log(`API 请求失败: ${error}，降级为周末判断`);
+    try {
+        const response = await $.http.get({ url, headers: { "User-Agent": "Mozilla/5.0" } });
+        const data = response.body;
+
+        try {
+            const res = JSON.parse(data);
+            if (res.code === 0) {
+                const type = res.type.type;
+                // 0:工作日, 3:调休(上班) -> 是工作日
+                // 1:周末, 2:节日 -> 非工作日
+                const isWork = (type === 0 || type === 3);
+                $.log(`API 查询结果: ${dateStr} type=${type} (${res.type.name}), result=${isWork}`);
+                return isWork;
+            } else {
+                $.log(`API 返回错误代码: ${data}`);
+                // 降级
                 const day = now.getDay();
-                resolve(day !== 0 && day !== 6);
-                return;
+                return (day !== 0 && day !== 6);
             }
-            
-            try {
-                const res = JSON.parse(data);
-                if (res.code === 0) {
-                    const type = res.type.type;
-                    // 0:工作日, 3:调休(上班) -> 是工作日
-                    // 1:周末, 2:节日 -> 非工作日
-                    const isWork = (type === 0 || type === 3);
-                    $.log(`API 查询结果: ${dateStr} type=${type} (${res.type.name}), result=${isWork}`);
-                    resolve(isWork);
-                } else {
-                    $.log(`API 返回错误代码: ${data}`);
-                    // 降级
-                    const day = now.getDay();
-                    resolve(day !== 0 && day !== 6);
-                }
-            } catch (e) {
-                $.log(`解析 API 数据失败: ${e.message}`);
-                const day = now.getDay();
-                resolve(day !== 0 && day !== 6);
-            }
-        });
-    });
+        } catch (e) {
+            $.log(`解析 API 数据失败: ${e.message}`);
+            const day = now.getDay();
+            return (day !== 0 && day !== 6);
+        }
+    } catch (error) {
+        $.log(`API 请求失败: ${error}，降级为周末判断`);
+        const day = now.getDay();
+        return (day !== 0 && day !== 6);
+    }
 }
 
 // Env Helper (Loon Only)

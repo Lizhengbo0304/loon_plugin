@@ -4,7 +4,7 @@
  * 功能：上班打卡提醒/执行
  * Cron: 31 8 * * *
  */
-const $ = new Env("签到任务-上班签到");
+const $ = API("签到任务-上班签到");
 
 const KEY_IS_WORKDAY = "work_signin_is_workday";
 const KEY_IS_LEAVE = "work_signin_is_leave";
@@ -53,7 +53,7 @@ const KEY_QYWX_KEY = "work_signin_qywx_key";
 
     } catch (e) {
         $.log(`❌ 错误: ${e.message}`);
-        $.msg($.name, "运行出错", e.message);
+        $.notify($.name, "运行出错", e.message);
     } finally {
         $.done();
     }
@@ -77,30 +77,29 @@ async function sendSignInMessage(title, content) {
         }
     };
 
-    return new Promise((resolve, reject) => {
-        $.post({
+    try {
+        const response = await $.http.post({
             url,
             body: JSON.stringify(body),
             headers: { "Content-Type": "application/json" }
-        }, (error, response, data) => {
-            if (error) {
-                reject(new Error(`请求失败: ${error}`));
-                return;
-            }
-            try {
-                const res = JSON.parse(data);
-                if (res.errcode === 0) {
-                    $.log("企业微信消息发送成功");
-                    $.msg($.name, title, "消息已推送");
-                    resolve(res);
-                } else {
-                    reject(new Error(`发送失败: [${res.errcode}] ${res.errmsg}`));
-                }
-            } catch (e) {
-                reject(new Error(`解析响应失败: ${e.message}`));
-            }
         });
-    });
+        const data = response.body;
+
+        try {
+            const res = JSON.parse(data);
+            if (res.errcode === 0) {
+                $.log("企业微信消息发送成功");
+                $.notify($.name, title, "消息已推送");
+                return res;
+            } else {
+                throw new Error(`发送失败: [${res.errcode}] ${res.errmsg}`);
+            }
+        } catch (e) {
+            throw new Error(`解析响应失败: ${e.message}`);
+        }
+    } catch (error) {
+        throw new Error(`请求失败: ${error}`);
+    }
 }
 
 // Env Helper (Loon Only)
