@@ -51,9 +51,9 @@ try {
     }
 
     // 写入到 BoxJS（使用持久化存储键）
-    $.write(result.accessToken, "zhuzher_access_token");
-    if (result.refreshToken) $.write(result.refreshToken, "zhuzher_refresh_token");
-    if (result.userID) $.write(result.userID, "zhuzher_user_id");
+    $.write(result.accessToken, "#zhuzher_access_token");
+    if (result.refreshToken) $.write(result.refreshToken, "#zhuzher_refresh_token");
+    if (result.userID) $.write(result.userID, "#zhuzher_user_id");
 
     // 一些可读信息
     const exp = result.expires ? new Date(result.expires * 1000).toLocaleString() : "未知";
