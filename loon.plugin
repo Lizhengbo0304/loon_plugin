@@ -6,7 +6,7 @@
 
 [Script]
 cron "0 1 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_check.js, tag=WorkSignin-DailyCheck
-cron "31 8 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, tag=WorkSignin-Morning
+cron "52 8 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, tag=WorkSignin-Morning
 cron "21 21 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, tag=WorkSignin-Evening
 http-request ^https:\/\/restapi\.amap\.com\/v3\/geocode\/geo script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/caiyun_qywx.js, timeout=10, tag=Caiyun-Geo-Request
 http-response ^https:\/\/api\.5th\.zone\/auth\/v3\/external\/oauth\/accessToken script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-AccessToken
