@@ -1,23 +1,45 @@
 #!name=Loon自用脚本合集
-#!desc=彩云天气、住这儿开门、记账与 Nicegram 脚本集
+#!desc=彩云天气、住这儿开门、记账与 Nicegram 脚本集（支持独立开关）
 #!author=Lizhengbo
-#!version=2025.12.12
+#!version=2025.12.16
 #!homepage=https://github.com/Lizhengbo0304/loon_plugin
 
+[Plugin]
+work_signin_daily: 每日工作签到检查 = true
+work_signin_morning: 上班签到（早） = true
+work_signin_evening: 下班签到（晚） = true
+caiyun_geo: 彩云天气·高德定位拦截 = true
+zhuzher_token: 住这儿·登录Token拦截 = true
+zhuzher_open_door: 住这儿·快捷指令开门 = true
+kapi_accounting: 记账App功能解锁 = true
+nicegram_pro: Nicegram Pro 解锁 = true
+
 [Script]
-cron "0 1 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_check.js, tag=WorkSignin-DailyCheck
-cron "52 8 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, tag=WorkSignin-Morning
-cron "21 21 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, tag=WorkSignin-Evening
-http-request ^https:\/\/restapi\.amap\.com\/v3\/geocode\/geo script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/caiyun_qywx.js, timeout=10, tag=Caiyun-Geo-Request
-http-response ^https:\/\/api\.5th\.zone\/auth\/v3\/external\/oauth\/accessToken script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-AccessToken
-http-response ^https:\/\/api\.5th\.zone\/linksail\/api\/mobile\/login script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-MobileLogin
-http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/settings\/profile\/get script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Profile-Get
-http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/common\/app\/config\/list script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-App-Config-List
-http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/user\/account\/status script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Account-Status
-http-request ^http:\/\/lizhengbo\.opendoor\.com\/\?deviceName=.+ script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-open-door.js, timeout=20, tag=Zhuzher-Shortcut-OpenDoor
-http-request ^http:\/\/lizhengbo\.work\/signin\/morning script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, timeout=10, tag=WorkSignin-Morning-Manual
-http-request ^http:\/\/lizhengbo\.work\/signin\/evening script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, timeout=10, tag=WorkSignin-Evening-Manual
-http-response ^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth) script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/NiceframProCrack.js, requires-body=true, timeout=10, tag=NicegramProCrack
+cron "0 1 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_check.js, tag=WorkSignin-DailyCheck, enabled={{{work_signin_daily}}}
+
+cron "52 8 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, tag=WorkSignin-Morning, enabled={{{work_signin_morning}}}
+
+cron "21 21 * * *" script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, tag=WorkSignin-Evening, enabled={{{work_signin_evening}}}
+
+http-request ^https:\/\/restapi\.amap\.com\/v3\/geocode\/geo script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/caiyun_qywx.js, timeout=10, tag=Caiyun-Geo-Request, enabled={{{caiyun_geo}}}
+
+http-response ^https:\/\/api\.5th\.zone\/auth\/v3\/external\/oauth\/accessToken script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-AccessToken, enabled={{{zhuzher_token}}}
+
+http-response ^https:\/\/api\.5th\.zone\/linksail\/api\/mobile\/login script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-token-intercept.js, requires-body=true, timeout=10, tag=Zhuzher-MobileLogin, enabled={{{zhuzher_token}}}
+
+http-request ^http:\/\/lizhengbo\.opendoor\.com\/\?deviceName=.+ script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/zhuzher-open-door.js, timeout=20, tag=Zhuzher-Shortcut-OpenDoor, enabled={{{zhuzher_open_door}}}
+
+http-request ^http:\/\/lizhengbo\.work\/signin\/morning script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_morning.js, timeout=10, tag=WorkSignin-Morning-Manual, enabled={{{work_signin_morning}}}
+
+http-request ^http:\/\/lizhengbo\.work\/signin\/evening script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/function/work_signin_evening.js, timeout=10, tag=WorkSignin-Evening-Manual, enabled={{{work_signin_evening}}}
+
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/settings\/profile\/get script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Profile-Get, enabled={{{kapi_accounting}}}
+
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/common\/app\/config\/list script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-App-Config-List, enabled={{{kapi_accounting}}}
+
+http-response ^https:\/\/api\.heylumi\.cn\/note\/note-api\/user\/account\/status script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/kapi-accounting.js, requires-body=true, timeout=10, tag=Kapi-Account-Status, enabled={{{kapi_accounting}}}
+
+http-response ^https?:\/\/nicegram\.cloud\/api\/v\d\/(ai-assistant\/purchase-list|user\/info|telegram\/auth) script-path=https://raw.githubusercontent.com/Lizhengbo0304/loon_plugin/refs/heads/main/crack/NiceframProCrack.js, requires-body=true, timeout=10, tag=NicegramProCrack, enabled={{{nicegram_pro}}}
 
 [Mitm]
 hostname = restapi.amap.com, api.heylumi.cn, api.5th.zone, nicegram.cloud
